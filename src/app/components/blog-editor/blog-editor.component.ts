@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {BlogService} from "../../services/blog.service";
 import {DatePipe} from "@angular/common";
 
+
 @Component({
   selector: 'app-blog-editor',
   templateUrl: './blog-editor.component.html',
@@ -23,8 +24,13 @@ export class BlogEditorComponent implements OnInit{
               private blogService: BlogService,
               private router: Router) { }
   ngOnInit(): void {
-   this.setEditorConfig()
+   this.setEditorConfig();
+
+
   }
+
+
+
   setEditorConfig() {
     this.ckeConfig = {
       removePlugins: ['ImageUpload', 'MediaEmbed'],
@@ -54,4 +60,5 @@ export class BlogEditorComponent implements OnInit{
   cancel() {
     this.router.navigate(['/']);
   }
+
 }

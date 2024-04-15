@@ -5,8 +5,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SlugPipe implements PipeTransform {
 
-  transform(value: unknown, ...args: unknown[]): unknown {
-    return null;
+  transform(title: string) {
+    const urlSlug = title.trim().toLowerCase().replace(/ /g, '-');
+    return urlSlug;
   }
 
 }
