@@ -4,7 +4,6 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'excerpt'
 })
 export class ExcerptPipe implements PipeTransform {
-
   transform(content: string) {
     const postSummary = content.replace(/(<([^>]+)>)/ig, '');
     if (postSummary.length > 300) {
@@ -13,5 +12,4 @@ export class ExcerptPipe implements PipeTransform {
       return postSummary;
     }
   }
-
 }

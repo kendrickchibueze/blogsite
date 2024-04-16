@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Post} from "../../models/post";
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+//import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import {ActivatedRoute, Router} from "@angular/router";
 import {BlogService} from "../../services/blog.service";
 import {DatePipe} from "@angular/common";

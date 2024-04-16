@@ -15,6 +15,8 @@ import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
 import { BlogEditorComponent } from './components/blog-editor/blog-editor.component';
 import { ExcerptPipe } from './customPipes/excerpt.pipe';
 import { SlugPipe } from './customPipes/slug.pipe';
+import { BlogCardComponent } from './components/blog-card/blog-card.component';
+import { BlogComponent } from './components/blog/blog.component';
 
 
 
@@ -25,7 +27,9 @@ import { SlugPipe } from './customPipes/slug.pipe';
     HomeComponent,
     BlogEditorComponent,
     ExcerptPipe,
-    SlugPipe
+    SlugPipe,
+    BlogCardComponent,
+    BlogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,12 +40,13 @@ import { SlugPipe } from './customPipes/slug.pipe';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'addpost', component: BlogEditorComponent },
+      { path: 'blog/:id/:slug', component: BlogComponent },
       { path: '**', component: HomeComponent },
     ]),
     FormsModule,
     CKEditorModule
   ],
-  providers: [],
+  providers: [SlugPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
