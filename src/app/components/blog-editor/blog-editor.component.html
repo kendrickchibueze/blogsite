@@ -11,10 +11,7 @@
 
   <br />
   <div class="form-group">
-    <ckeditor name="myckeditor" [config]="ckeConfig"
-              [(ngModel)]="postData.content" #myckeditor="ngModel"
-              debounce="300" [editor]="Editor"></ckeditor>
-
+    <ckeditor name="myckeditor" [config]="ckeConfig" [(ngModel)]="postData.content" #myckeditor="ngModel" debounce="300" [editor]="Editor"></ckeditor>
   </div>
   <div class="form-group">
     <button type="submit" mat-raised-button

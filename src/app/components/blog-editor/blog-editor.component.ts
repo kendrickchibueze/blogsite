@@ -1,37 +1,45 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Post} from "../../models/post";
 //import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as ClassicEditor from 'ckeditor5-custom-build/build/ckeditor';
 import {ActivatedRoute, Router} from "@angular/router";
 import {BlogService} from "../../services/blog.service";
 import {DatePipe} from "@angular/common";
-
-
+import {Subject, takeUntil} from "rxjs";
 @Component({
   selector: 'app-blog-editor',
   templateUrl: './blog-editor.component.html',
   styleUrls: ['./blog-editor.component.scss'],
   providers: [DatePipe]
 })
-export class BlogEditorComponent implements OnInit{
+export class BlogEditorComponent implements OnInit, OnDestroy{
   public Editor:any = ClassicEditor ;
   ckeConfig: any;
   postData = new Post();
   formTitle = 'Add';
-  postId = '';
-
+  postId: string | null = null;
+  private unsubscribe$ = new Subject<void>();
   constructor(private route: ActivatedRoute,
               private datePipe: DatePipe,
               private blogService: BlogService,
-              private router: Router) { }
-  ngOnInit(): void {
-   this.setEditorConfig();
-
-
+              private router: Router) {
+    if (this.route.snapshot.params['id']) {
+      this.postId = this.route.snapshot.paramMap.get('id');
+    }
   }
-
-
-
+  ngOnInit() {
+    this.setEditorConfig();
+    if (this.postId) {
+      this.formTitle = 'Edit';
+      this.blogService.getPostbyId(this.postId)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(
+          result => {
+            this.setPostFormData(result);
+          }
+        );
+    }
+  }
   setEditorConfig() {
     this.ckeConfig = {
       removePlugins: ['ImageUpload', 'MediaEmbed'],
@@ -50,16 +58,30 @@ export class BlogEditorComponent implements OnInit{
     };
   }
   saveBlogPost() {
-    this.postData.createdDate = this.datePipe.transform(Date.now(), 'MMdd-yyyy HH:mm');
-    this.blogService.createPost(this.postData).then(
-      () => {
-        this.router.navigate(['/']);
-      }
-    );
+    if (this.postId) {
+      this.blogService.updatePost(this.postId, this.postData).then(
+        () => {
+          this.router.navigate(['/']);
+        }
+      );
+    } else {
+      this.postData.createdDate = this.datePipe.transform(Date.now(), 'MMdd-yyyy HH:mm');
+      this.blogService.createPost(this.postData).then(
+        () => {
+          this.router.navigate(['/']);
+        }
+      );
+    }
   }
-
   cancel() {
     this.router.navigate(['/']);
   }
-
+  setPostFormData(postFormData:any) {
+    this.postData.title = postFormData.title;
+    this.postData.content = postFormData.content;
+  }
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }
